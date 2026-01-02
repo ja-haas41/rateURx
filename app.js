@@ -10,17 +10,17 @@ class ExRaterApp {
 
     getDefaultDimensions() {
         return [
-            { id: 1, name: 'Communication', weight: 5 },
-            { id: 2, name: 'Emotional Support', weight: 4 },
-            { id: 3, name: 'Shared Values', weight: 5 },
-            { id: 4, name: 'Respect', weight: 5 },
-            { id: 5, name: 'Reliability', weight: 4 },
-            { id: 6, name: 'Personal Growth', weight: 3 },
-            { id: 7, name: 'Conflict Resolution', weight: 4 },
-            { id: 8, name: 'Closeness', weight: 4 },
-            { id: 9, name: 'Future Compatibility', weight: 5 },
-            { id: 10, name: 'Fitness', weight: 2 },
-            { id: 11, name: 'Healthy Lifestyle', weight: 3 }
+            { id: 1, name: 'Communication', weight: 8 },
+            { id: 2, name: 'Emotional Support', weight: 7 },
+            { id: 3, name: 'Shared Values', weight: 9 },
+            { id: 4, name: 'Respect', weight: 10 },
+            { id: 5, name: 'Reliability', weight: 7 },
+            { id: 6, name: 'Personal Growth', weight: 6 },
+            { id: 7, name: 'Conflict Resolution', weight: 8 },
+            { id: 8, name: 'Closeness', weight: 7 },
+            { id: 9, name: 'Future Compatibility', weight: 9 },
+            { id: 10, name: 'Fitness', weight: 4 },
+            { id: 11, name: 'Healthy Lifestyle', weight: 5 }
         ];
     }
 
@@ -202,12 +202,32 @@ class ExRaterApp {
         saveBtn.addEventListener('click', () => this.saveRatings());
         container.appendChild(saveBtn);
 
-        // Bind rating slider events
+        // Bind rating slider events with better touch handling
         container.querySelectorAll('.rating-input').forEach(input => {
-            input.addEventListener('input', (e) => {
+            const updateValue = (e) => {
                 const value = e.target.value;
                 const valueDisplay = e.target.parentNode.querySelector('.rating-value');
                 valueDisplay.textContent = `${value}/10`;
+            };
+
+            // Handle multiple event types for better responsiveness
+            input.addEventListener('input', updateValue);
+            input.addEventListener('change', updateValue);
+            
+            // Add touch-specific handling for iOS
+            input.addEventListener('touchstart', (e) => {
+                e.target.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('touchend', (e) => {
+                e.target.style.transform = 'scale(1)';
+                updateValue(e);
+            });
+            
+            // Prevent default touch behaviors that might interfere
+            input.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                updateValue(e);
             });
         });
     }
@@ -323,8 +343,9 @@ class ExRaterApp {
                     <strong>${dimension.name}</strong>
                 </div>
                 <div class="dimension-actions">
-                    <input type="number" min="1" max="5" value="${dimension.weight}" 
-                           class="weight-input" data-dimension="${dimension.id}">
+                    <input type="number" min="1" max="10" step="1" value="${dimension.weight}" 
+                           class="weight-input" data-dimension="${dimension.id}"
+                           title="Weight: 1-10 (higher = more important)">
                     <button class="btn btn-danger" onclick="app.deleteDimension(${dimension.id})">
                         Delete
                     </button>
@@ -332,12 +353,115 @@ class ExRaterApp {
             </div>
         `).join('');
 
-        // Bind weight change events
+        // Bind weight change events with bulletproof validation
         container.querySelectorAll('.weight-input').forEach(input => {
-            input.addEventListener('change', (e) => {
+            // Set initial valid value
+            if (parseInt(input.value) < 1 || parseInt(input.value) > 10) {
+                input.value = '5';
+            }
+            
+            // Prevent invalid keystrokes completely
+            input.addEventListener('keydown', (e) => {
+                const currentValue = input.value;
+                const key = e.key;
+                const cursorPos = input.selectionStart;
+                
+                // Allow navigation and editing keys
+                if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) {
+                    return;
+                }
+                
+                // Allow Ctrl combinations
+                if (e.ctrlKey || e.metaKey) {
+                    return;
+                }
+                
+                // Only allow digits
+                if (!/^[0-9]$/.test(key)) {
+                    e.preventDefault();
+                    return;
+                }
+                
+                // Simulate the new value after this keystroke
+                let newValue = currentValue.slice(0, cursorPos) + key + currentValue.slice(input.selectionEnd);
+                
+                // Remove leading zeros
+                newValue = newValue.replace(/^0+/, '') || '0';
+                
+                const numValue = parseInt(newValue);
+                
+                // Prevent if it would create invalid number
+                if (isNaN(numValue) || numValue < 1 || numValue > 10) {
+                    e.preventDefault();
+                }
+            });
+
+            // Force correction on any input change
+            input.addEventListener('input', (e) => {
+                let value = e.target.value;
+                
+                // Remove non-digits
+                value = value.replace(/[^0-9]/g, '');
+                
+                // Handle empty or zero
+                if (value === '' || value === '0') {
+                    e.target.value = '1';
+                    return;
+                }
+                
+                // Remove leading zeros
+                value = value.replace(/^0+/, '');
+                
+                const numValue = parseInt(value);
+                
+                // Enforce boundaries
+                if (numValue < 1) {
+                    e.target.value = '1';
+                } else if (numValue > 10) {
+                    e.target.value = '10';
+                } else {
+                    e.target.value = numValue.toString();
+                }
+            });
+            
+            // Validate when focus leaves the field
+            input.addEventListener('blur', (e) => {
+                let value = parseInt(e.target.value);
+                
+                if (isNaN(value) || value < 1) {
+                    e.target.value = '1';
+                    value = 1;
+                } else if (value > 10) {
+                    e.target.value = '10';
+                    value = 10;
+                }
+                
                 const dimensionId = parseInt(e.target.dataset.dimension);
-                const newWeight = parseInt(e.target.value);
-                this.updateDimensionWeight(dimensionId, newWeight);
+                this.updateDimensionWeight(dimensionId, value);
+            });
+            
+            // Handle paste events
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                
+                let paste = (e.clipboardData || window.clipboardData).getData('text');
+                paste = paste.replace(/[^0-9]/g, '');
+                
+                if (paste === '' || paste === '0') {
+                    e.target.value = '1';
+                } else {
+                    let numValue = parseInt(paste);
+                    if (numValue < 1) {
+                        e.target.value = '1';
+                    } else if (numValue > 10) {
+                        e.target.value = '10';
+                    } else {
+                        e.target.value = numValue.toString();
+                    }
+                }
+                
+                const dimensionId = parseInt(e.target.dataset.dimension);
+                this.updateDimensionWeight(dimensionId, parseInt(e.target.value));
             });
         });
     }
@@ -345,8 +469,11 @@ class ExRaterApp {
     updateDimensionWeight(dimensionId, weight) {
         const dimension = this.dimensions.find(d => d.id === dimensionId);
         if (dimension) {
-            dimension.weight = Math.max(1, Math.min(5, weight));
+            // Enforce strict boundaries
+            dimension.weight = Math.max(1, Math.min(10, weight));
             this.saveData();
+            // Update the ex list to reflect new scores
+            this.renderExList();
         }
     }
 
@@ -356,7 +483,7 @@ class ExRaterApp {
             const newDimension = {
                 id: Date.now(),
                 name: name.trim(),
-                weight: 3
+                weight: 5
             };
             this.dimensions.push(newDimension);
             this.saveData();

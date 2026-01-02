@@ -88,17 +88,30 @@ body {
 /* Search and Filter */
 .search-filter {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 20px;
+    padding: 0 10px; /* Increased padding from edges */
 }
 
-.search-filter input,
-.search-filter select {
-    flex: 1;
+.search-filter input {
+    flex: 3; /* Give search input more space */
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 16px;
+}
+
+.search-filter select {
+    flex: 2; /* Give dropdown less space */
+    min-width: 100px; /* Smaller minimum width */
+    max-width: 130px; /* Smaller maximum width */
+    padding: 12px 6px; /* Reduced horizontal padding */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 13px; /* Smaller font */
+    background-color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Ex List */
@@ -178,6 +191,14 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+    gap: 25px; /* Increased gap even more */
+}
+
+.form-header h2 {
+    flex: 1;
+    text-align: center;
+    margin: 0 20px; /* Increased margin significantly */
+    font-size: 20px;
 }
 
 .ex-form {
@@ -204,6 +225,12 @@ body {
 .form-group label {
     font-weight: 600;
     color: #333;
+}
+
+.optional {
+    font-weight: 400;
+    color: #999;
+    font-size: 14px;
 }
 
 .form-group input,
@@ -250,25 +277,80 @@ body {
 
 .rating-slider {
     margin: 15px 0;
+    padding: 10px 0; /* Extra padding for easier touch */
+    /* Prevent text selection during touch */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .rating-slider input[type="range"] {
     width: 100%;
+    height: 40px; /* Increased touch area */
+    border-radius: 3px;
+    background: transparent;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    /* Better touch handling */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* Track styling */
+.rating-slider input[type="range"]::-webkit-slider-track {
+    width: 100%;
     height: 6px;
     border-radius: 3px;
     background: #ddd;
-    outline: none;
-    -webkit-appearance: none;
+    border: none;
 }
 
+.rating-slider input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #ddd;
+    border: none;
+}
+
+/* Thumb styling with larger touch area */
 .rating-slider input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 28px; /* Larger thumb */
+    height: 28px;
     border-radius: 50%;
     background: #667eea;
     cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    /* Better touch response */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.rating-slider input[type="range"]::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #667eea;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Active state for better feedback */
+.rating-slider input[type="range"]:active::-webkit-slider-thumb {
+    transform: scale(1.1);
+    background: #5a6fd8;
+}
+
+.rating-slider input[type="range"]:active::-moz-range-thumb {
+    transform: scale(1.1);
+    background: #5a6fd8;
 }
 
 .rating-value {
@@ -292,7 +374,28 @@ body {
     min-height: 60px;
 }
 
-/* Dimensions Management */
+/* Weight Info Section */
+.weight-info {
+    background: #f0f4ff;
+    border: 1px solid #d1e7ff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.weight-info h3 {
+    color: #667eea;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.weight-info p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+}
 .dimension-management-item {
     background: #f8f9fa;
     border-radius: 12px;
@@ -313,11 +416,23 @@ body {
 }
 
 .weight-input {
-    width: 60px;
-    padding: 6px;
+    width: 70px;
+    padding: 8px;
     border: 1px solid #ddd;
     border-radius: 6px;
     text-align: center;
+    font-weight: 600;
+    color: #667eea;
+    font-size: 16px; /* Prevent zoom on iOS */
+    -webkit-appearance: none;
+    -moz-appearance: textfield; /* Hide spinner on Firefox */
+}
+
+/* Hide number input spinners on WebKit browsers */
+.weight-input::-webkit-outer-spin-button,
+.weight-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Bottom Navigation */
