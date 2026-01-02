@@ -1,12 +1,12 @@
-const CACHE_NAME = 'rate-ur-x-v7';
+const CACHE_NAME = 'rate-ur-x-v8';
 const urlsToCache = [
-  'https://ja-haas41.github.io/rateURx/',
-  'https://ja-haas41.github.io/rateURx/index.html',
-  'https://ja-haas41.github.io/rateURx/styles.css',
-  'https://ja-haas41.github.io/rateURx/app.js',
-  'https://ja-haas41.github.io/rateURx/manifest.json',
-  'https://ja-haas41.github.io/rateURx/icon-192.png',
-  'https://ja-haas41.github.io/rateURx/icon-512.png'
+  './',
+  './index.html',
+  './styles.css',
+  './app.js',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', event => {
