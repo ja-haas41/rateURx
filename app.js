@@ -207,7 +207,9 @@ class ExRaterApp {
             const updateValue = (e) => {
                 const value = e.target.value;
                 const valueDisplay = e.target.parentNode.querySelector('.rating-value');
-                valueDisplay.textContent = `${value}/10`;
+                if (valueDisplay) {
+                    valueDisplay.textContent = `${value}/10`;
+                }
             };
 
             // Handle multiple event types for better responsiveness
@@ -216,19 +218,23 @@ class ExRaterApp {
             
             // Add touch-specific handling for iOS
             input.addEventListener('touchstart', (e) => {
-                e.target.style.transform = 'scale(1.02)';
+                // Ensure the slider is interactive
+                e.target.focus();
+            });
+            
+            input.addEventListener('touchmove', (e) => {
+                // Allow the default touch behavior for sliders
+                updateValue(e);
             });
             
             input.addEventListener('touchend', (e) => {
-                e.target.style.transform = 'scale(1)';
                 updateValue(e);
             });
             
-            // Prevent default touch behaviors that might interfere
-            input.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-                updateValue(e);
-            });
+            // Mouse events for desktop
+            input.addEventListener('mousedown', updateValue);
+            input.addEventListener('mousemove', updateValue);
+            input.addEventListener('mouseup', updateValue);
         });
     }
 

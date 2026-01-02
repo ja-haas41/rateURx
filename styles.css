@@ -285,75 +285,77 @@ body {
     user-select: none;
 }
 
+.rating-slider {
+    margin: 15px 0;
+    padding: 10px 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .rating-slider input[type="range"] {
     width: 100%;
-    height: 40px; /* Increased touch area */
+    height: 6px;
+    background: #ddd;
     border-radius: 3px;
-    background: transparent;
     outline: none;
     -webkit-appearance: none;
     appearance: none;
     cursor: pointer;
-    /* Better touch handling */
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
 }
 
-/* Track styling - this was missing! */
+/* WebKit browsers (Safari, Chrome) */
 .rating-slider input[type="range"]::-webkit-slider-track {
     width: 100%;
     height: 6px;
-    border-radius: 3px;
     background: #ddd;
+    border-radius: 3px;
     border: none;
-    -webkit-appearance: none;
 }
 
+.rating-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    background: #667eea;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+/* Firefox */
 .rating-slider input[type="range"]::-moz-range-track {
     width: 100%;
     height: 6px;
-    border-radius: 3px;
     background: #ddd;
+    border-radius: 3px;
     border: none;
 }
 
-/* Thumb styling with larger touch area */
-.rating-slider input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 28px; /* Larger thumb */
-    height: 28px;
-    border-radius: 50%;
-    background: #667eea;
-    cursor: pointer;
-    border: 3px solid white;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    /* Better touch response */
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-    margin-top: -11px; /* Center the thumb on the track */
-}
-
 .rating-slider input[type="range"]::-moz-range-thumb {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+    width: 24px;
+    height: 24px;
     background: #667eea;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     cursor: pointer;
-    border: 3px solid white;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     -moz-appearance: none;
 }
 
-/* Active state for better feedback */
+/* Active states */
 .rating-slider input[type="range"]:active::-webkit-slider-thumb {
-    transform: scale(1.1);
     background: #5a6fd8;
+    transform: scale(1.1);
 }
 
 .rating-slider input[type="range"]:active::-moz-range-thumb {
-    transform: scale(1.1);
     background: #5a6fd8;
+    transform: scale(1.1);
 }
 
 .rating-value {
