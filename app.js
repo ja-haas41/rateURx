@@ -353,115 +353,41 @@ class ExRaterApp {
             </div>
         `).join('');
 
-        // Bind weight change events with bulletproof validation
+        // Bind weight change events - simplified and working
         container.querySelectorAll('.weight-input').forEach(input => {
-            // Set initial valid value
-            if (parseInt(input.value) < 1 || parseInt(input.value) > 10) {
-                input.value = '5';
-            }
-            
-            // Prevent invalid keystrokes completely
-            input.addEventListener('keydown', (e) => {
-                const currentValue = input.value;
-                const key = e.key;
-                const cursorPos = input.selectionStart;
-                
-                // Allow navigation and editing keys
-                if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) {
-                    return;
-                }
-                
-                // Allow Ctrl combinations
-                if (e.ctrlKey || e.metaKey) {
-                    return;
-                }
-                
-                // Only allow digits
-                if (!/^[0-9]$/.test(key)) {
-                    e.preventDefault();
-                    return;
-                }
-                
-                // Simulate the new value after this keystroke
-                let newValue = currentValue.slice(0, cursorPos) + key + currentValue.slice(input.selectionEnd);
-                
-                // Remove leading zeros
-                newValue = newValue.replace(/^0+/, '') || '0';
-                
-                const numValue = parseInt(newValue);
-                
-                // Prevent if it would create invalid number
-                if (isNaN(numValue) || numValue < 1 || numValue > 10) {
-                    e.preventDefault();
-                }
-            });
-
-            // Force correction on any input change
+            // Handle input changes
             input.addEventListener('input', (e) => {
                 let value = e.target.value;
                 
-                // Remove non-digits
-                value = value.replace(/[^0-9]/g, '');
-                
-                // Handle empty or zero
-                if (value === '' || value === '0') {
-                    e.target.value = '1';
-                    return;
-                }
-                
-                // Remove leading zeros
-                value = value.replace(/^0+/, '');
-                
-                const numValue = parseInt(value);
-                
-                // Enforce boundaries
-                if (numValue < 1) {
-                    e.target.value = '1';
-                } else if (numValue > 10) {
-                    e.target.value = '10';
-                } else {
-                    e.target.value = numValue.toString();
+                // Only remove non-numeric characters, but allow typing
+                if (!/^\d*$/.test(value)) {
+                    e.target.value = value.replace(/[^0-9]/g, '');
                 }
             });
             
-            // Validate when focus leaves the field
+            // Validate when user finishes editing
             input.addEventListener('blur', (e) => {
                 let value = parseInt(e.target.value);
                 
+                // Set to valid range
                 if (isNaN(value) || value < 1) {
-                    e.target.value = '1';
                     value = 1;
                 } else if (value > 10) {
-                    e.target.value = '10';
                     value = 10;
                 }
                 
+                e.target.value = value;
+                
+                // Update the dimension weight
                 const dimensionId = parseInt(e.target.dataset.dimension);
                 this.updateDimensionWeight(dimensionId, value);
             });
             
-            // Handle paste events
-            input.addEventListener('paste', (e) => {
-                e.preventDefault();
-                
-                let paste = (e.clipboardData || window.clipboardData).getData('text');
-                paste = paste.replace(/[^0-9]/g, '');
-                
-                if (paste === '' || paste === '0') {
-                    e.target.value = '1';
-                } else {
-                    let numValue = parseInt(paste);
-                    if (numValue < 1) {
-                        e.target.value = '1';
-                    } else if (numValue > 10) {
-                        e.target.value = '10';
-                    } else {
-                        e.target.value = numValue.toString();
-                    }
+            // Also handle when user presses Enter
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.target.blur(); // Trigger the blur event
                 }
-                
-                const dimensionId = parseInt(e.target.dataset.dimension);
-                this.updateDimensionWeight(dimensionId, parseInt(e.target.value));
             });
         });
     }
