@@ -45,16 +45,16 @@
                         <input type="text" id="ex-name" required>
                     </div>
                     <div class="form-group">
-                        <label for="ex-location">Location</label>
+                        <label for="ex-location">Location <span class="optional">(optional)</span></label>
                         <input type="text" id="ex-location">
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="ex-height">Height</label>
+                            <label for="ex-height">Height <span class="optional">(optional)</span></label>
                             <input type="text" id="ex-height" placeholder="5'8&quot;">
                         </div>
                         <div class="form-group">
-                            <label for="ex-weight">Weight</label>
+                            <label for="ex-weight">Weight <span class="optional">(optional)</span></label>
                             <input type="text" id="ex-weight" placeholder="150 lbs">
                         </div>
                     </div>
@@ -77,6 +77,10 @@
                     <button id="dimensions-back-btn" class="btn btn-secondary">← Back</button>
                     <h2>Manage Dimensions</h2>
                     <button id="add-dimension-btn" class="btn btn-primary">+ Add</button>
+                </div>
+                <div class="weight-info">
+                    <h3>Dimension Weights (1-10)</h3>
+                    <p>Set how important each dimension is when calculating overall scores. Higher weights (closer to 10) make that dimension more influential in the final score.</p>
                 </div>
                 <div id="dimensions-list"></div>
             </div>
