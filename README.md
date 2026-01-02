@@ -1,4 +1,4 @@
-# Ex Rater - Progressive Web App
+# rateURx - Progressive Web App
 
 A modern iOS-style progressive web app for rating and comparing your ex-partners across multiple dimensions.
 
