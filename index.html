@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Ex Rater">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="manifest" href="manifest.json">
+    <title>Ex Rater</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <h1>Ex Rater</h1>
+            <button id="add-ex-btn" class="btn btn-primary">+ Add Ex</button>
+        </header>
+
+        <main id="main-content">
+            <!-- Ex List View -->
+            <div id="ex-list-view" class="view active">
+                <div class="search-filter">
+                    <input type="text" id="search-input" placeholder="Search by name...">
+                    <select id="sort-select">
+                        <option value="score-desc">Highest Score</option>
+                        <option value="score-asc">Lowest Score</option>
+                        <option value="name-asc">Name A-Z</option>
+                        <option value="name-desc">Name Z-A</option>
+                    </select>
+                </div>
+                <div id="ex-list" class="ex-list"></div>
+            </div>
+
+            <!-- Add/Edit Ex View -->
+            <div id="ex-form-view" class="view">
+                <div class="form-header">
+                    <button id="back-btn" class="btn btn-secondary">← Back</button>
+                    <h2 id="form-title">Add New Ex</h2>
+                </div>
+                <form id="ex-form" class="ex-form">
+                    <div class="form-group">
+                        <label for="ex-name">Name *</label>
+                        <input type="text" id="ex-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ex-location">Location</label>
+                        <input type="text" id="ex-location">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ex-height">Height</label>
+                            <input type="text" id="ex-height" placeholder="5'8&quot;">
+                        </div>
+                        <div class="form-group">
+                            <label for="ex-weight">Weight</label>
+                            <input type="text" id="ex-weight" placeholder="150 lbs">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Ex</button>
+                </form>
+            </div>
+
+            <!-- Rating View -->
+            <div id="rating-view" class="view">
+                <div class="form-header">
+                    <button id="rating-back-btn" class="btn btn-secondary">← Back</button>
+                    <h2 id="rating-title">Rate Ex</h2>
+                </div>
+                <div id="rating-content"></div>
+            </div>
+
+            <!-- Dimensions Management View -->
+            <div id="dimensions-view" class="view">
+                <div class="form-header">
+                    <button id="dimensions-back-btn" class="btn btn-secondary">← Back</button>
+                    <h2>Manage Dimensions</h2>
+                    <button id="add-dimension-btn" class="btn btn-primary">+ Add</button>
+                </div>
+                <div id="dimensions-list"></div>
+            </div>
+        </main>
+
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-view="ex-list-view">
+                <span>📋</span>
+                <span>List</span>
+            </button>
+            <button class="nav-btn" data-view="dimensions-view">
+                <span>⚖️</span>
+                <span>Dimensions</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(registrationError => console.log('SW registration failed'));
+            });
+        }
+    </script>
+</body>
+</html>
